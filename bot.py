@@ -1,10 +1,17 @@
+import os
+import asyncio
 from pyrogram import Client, filters
 
-API_ID = 123456
-API_HASH = "your_api_hash"
-BOT_TOKEN = "your_bot_token"
+API_ID = int(os.environ["API_ID"])
+API_HASH = os.environ["API_HASH"]
+BOT_TOKEN = os.environ["BOT_TOKEN"]
 
-app = Client("renamebot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
+app = Client(
+    "renamebot",
+    api_id=API_ID,
+    api_hash=API_HASH,
+    bot_token=BOT_TOKEN
+)
 
 @app.on_message(filters.document)
 async def rename_file(client, message):
@@ -18,4 +25,10 @@ async def rename_file(client, message):
         file_name=new_name
     )
 
-app.run()
+# 🔥 FIX for Railway async issue
+async def main():
+    await app.start()
+    print("Bot is running...")
+    await asyncio.Event().wait()
+
+asyncio.run(main())
