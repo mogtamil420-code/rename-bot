@@ -10,19 +10,17 @@ app = Client(
     "renamebot",
     api_id=API_ID,
     api_hash=API_HASH,
-    bot_token=BOT_TOKEN
+    bot_token=BOT_TOKEN,
+    in_memory=True
 )
 
-# /start handler
 @app.on_message(filters.command("start"))
-async def start(client, message):
-    await message.reply_text("✅ Bot is alive!\nSend me a file to rename.")
+async def start(_, message):
+    await message.reply("✅ Bot is working!\nSend me a file.")
 
-# rename handler
 @app.on_message(filters.document)
-async def rename(client, message):
+async def rename(_, message):
     file = message.document
-
     file_path = await message.download()
 
     new_name = "RENAMED_" + file.file_name
@@ -37,4 +35,5 @@ async def main():
     print("BOT RUNNING")
     await asyncio.Event().wait()
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
